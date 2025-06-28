@@ -8,11 +8,10 @@ const { resources } = require('../../config/roles');
 
 const router = express.Router();
 
-router
-    .route("/jobs")
-    .get(
-        grantAccess('readOwn', resources.JOB),
-        jobController.getJobsByEmployer
-    );
+router.get(
+    "/jobs",
+    grantAccess('readOwn', resources.JOB),
+    jobController.getJobsByEmployer
+);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const db = require('../db/models');
 const ApiError = require('../utils/ApiError');
 const { Op } = require('sequelize');
+const redisClient = require('../config/redis');
 
 async function createJob(req) {
     const { title, description, location, salary, required_skills } = req.body;
@@ -19,8 +20,21 @@ async function createJob(req) {
     return job.get({ plain: true });
 }
 
-
 async function getAllJobs({ keyword, location } = {}) {
+    // 1. Generate a unique cache key per filter combination
+    const cacheKeyParts = ['recent_jobs'];
+    if (keyword) cacheKeyParts.push(`keyword:${keyword}`);
+    if (location) cacheKeyParts.push(`location:${location}`);
+    const CACHE_KEY = cacheKeyParts.join('|');
+
+    // 2. Try Redis cache
+    const cached = await redisClient.get(CACHE_KEY);
+    if (cached) {
+        console.log(`[Redis] Cache hit for ${CACHE_KEY}`);
+        return JSON.parse(cached);
+    }
+
+    console.log(`[Redis] Cache miss for ${CACHE_KEY}`);
     const whereClause = {};
 
     if (keyword) {
@@ -37,10 +51,17 @@ async function getAllJobs({ keyword, location } = {}) {
     const jobs = await db.job_listing.findAll({
         where: whereClause,
         order: [['created_date_time', 'DESC']],
+        limit: 10,
         attributes: { exclude: ['employer_id'] },
     });
 
-    return jobs.map((job) => job.get({ plain: true }));
+    const plainJobs = jobs.map((job) => job.get({ plain: true }));
+
+    // 3. Set cache for 5 minutes
+    await redisClient.setEx(CACHE_KEY, 300, JSON.stringify(plainJobs));
+    console.log(`[Redis] Cached ${CACHE_KEY} for 5 min`);
+
+    return plainJobs;
 }
 
 

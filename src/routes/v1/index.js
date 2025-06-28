@@ -2,7 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const roleRoute = require('./role.route');
 const docsRoute = require('./docs.route');
-const jobListingRoute = require('./job_listing.route');
+const jobListingRoute = require('./jobListing.route');
 const employerRoute = require('./employer.route');
 const metricsRoute = require('./metrics.route');
 

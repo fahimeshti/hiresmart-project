@@ -5,6 +5,7 @@ const applicationController = require('../../controllers/application.controller'
 const { jobValidation } = require('../../validations');
 const { grantAccess } = require('../../middlewares/validateAccessControl');
 const { resources } = require('../../config/roles');
+const { rateLimiter } = require('../../middlewares/rateLimiter');
 
 const router = express.Router();
 
@@ -28,18 +29,23 @@ router
         jobController.deleteJob
     );
 
-router
-    .route('/:jobId/apply')
-    .post(
-        grantAccess('createOwn', resources.APPLICATION),
-        applicationController.createApplication
-    );
+router.post(
+    '/:jobId/apply',
+    rateLimiter,
+    grantAccess('createOwn', resources.APPLICATION),
+    applicationController.createApplication
+);
 
-router
-    .route('/:jobId/applications')
-    .get(
-        grantAccess('readOwn', resources.APPLICATION),
-        applicationController.getApplicationsForJob
-    );
+router.get(
+    '/:jobId/applications',
+    grantAccess('readOwn', resources.APPLICATION),
+    applicationController.getApplicationsForJob
+);
+
+router.get(
+    '/:jobId/stats',
+    grantAccess('readOwn', resources.APPLICATION),
+    applicationController.getJobApplicationStats
+);
 
 module.exports = router;

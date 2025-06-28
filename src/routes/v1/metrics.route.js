@@ -5,23 +5,22 @@ const { resources } = require('../../config/roles');
 
 const router = express.Router();
 
-router
-    .route('/jobs')
-    .get(
-        grantAccess('readAny', resources.JOB),
-        metricsController.getJobCount
-    );
+router.get(
+    '/jobs',
+    grantAccess('readAny', resources.JOB),
+    metricsController.getJobCount
+);
 
-router.route('/users')
-    .get(
-        grantAccess('readAny', resources.USERINFO),
-        metricsController.getUserCount
-    );
+router.get(
+    '/users',
+    grantAccess('readAny', resources.USERINFO),
+    metricsController.getUserCount
+);
 
-router.route('/applications')
-    .get(
-        grantAccess('readAny', resources.APPLICATION),
-        metricsController.getApplicationCount
-    );
+router.get(
+    '/applications',
+    grantAccess('readAny', resources.APPLICATION),
+    metricsController.getApplicationCount
+);
 
 module.exports = router;

@@ -1,4 +1,3 @@
-
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { applicationService } = require('../services');
@@ -15,7 +14,14 @@ const getApplicationsForJob = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send({ applications });
 });
 
+const getJobApplicationStats = catchAsync(async (req, res) => {
+    const { jobId } = req.params;
+    const stats = await applicationService.getJobApplicationStats(jobId);
+    res.status(httpStatus.OK).send({ application_stats: stats });
+});
+
 module.exports = {
     createApplication,
-    getApplicationsForJob
+    getApplicationsForJob,
+    getJobApplicationStats,
 };
