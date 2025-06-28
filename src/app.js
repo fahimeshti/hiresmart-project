@@ -74,4 +74,7 @@ app.use(errorConverter);
 // handle error
 app.use(errorHandler);
 
+// Starts background job matcher
+require('./schedulers/match_scheduler');
+
 module.exports = app;

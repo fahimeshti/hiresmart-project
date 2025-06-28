@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.DECIMAL,
                 allowNull: true,
             },
+            status: {
+                type: DataTypes.ENUM('open', 'closed', 'archived'),
+                defaultValue: 'open',
+                allowNull: false,
+            },
             required_skills: {
                 type: DataTypes.ARRAY(DataTypes.STRING),
             },

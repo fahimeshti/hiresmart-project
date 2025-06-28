@@ -1,7 +1,8 @@
-const db = require('../models');
+const db = require('../db/models');
 
 function hasSkillMatch(candidateSkills, jobSkills) {
     if (!Array.isArray(candidateSkills) || !Array.isArray(jobSkills)) return false;
+    if (jobSkills.length === 0 || candidateSkills.length === 0) return false;
 
     return jobSkills.every(skill => candidateSkills.includes(skill));
 }
@@ -26,12 +27,18 @@ async function matchJobsAndCandidates() {
             const locationMatch = preferred_location?.toLowerCase() === job.location?.toLowerCase();
             const salaryMatch = expected_salary <= job.salary;
 
-            if (skillMatch && locationMatch || salaryMatch) {
+            if (skillMatch) {
                 const match = {
-                    candidate: candidate.name,
-                    job: job.title,
                     jobId: job.id,
                     candidateId: candidate.id,
+                    candidate: candidate.name,
+                    job: job.title,
+                    jobLocation: job.location,
+                    preferredLocation: preferred_location,
+                    jobSalary: job.salary,
+                    expectedSalary: expected_salary,
+                    candidateSkills: candidateSkills,
+                    jobSkills: jobSkills,
                 };
                 console.log(`✅ MATCH FOUND:`, match);
                 matches.push(match);
