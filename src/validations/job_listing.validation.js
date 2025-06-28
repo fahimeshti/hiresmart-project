@@ -7,6 +7,10 @@ const createJob = {
         description: Joi.string().required(),
         location: Joi.string().optional().allow(null, ''),
         salary: Joi.number().optional().positive().allow(null),
+        required_skills: Joi.array()
+            .items(Joi.string().trim())
+            .optional()
+            .allow(null),
     }),
 };
 
@@ -21,6 +25,7 @@ const updateJob = {
             description: Joi.string(),
             location: Joi.string().allow(null, ''),
             salary: Joi.number().positive().allow(null),
+            required_skills: Joi.array().allow(null),
         })
         .min(1),
 };

@@ -7,6 +7,10 @@ const register = {
 		password: Joi.string().required().custom(password),
 		name: Joi.string().required(),
 		roleId: Joi.string().required(),
+		skills: Joi.array()
+			.items(Joi.string().trim())
+			.optional()
+			.allow(null),
 	}),
 };
 

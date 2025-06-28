@@ -4,7 +4,7 @@ const ApiError = require('../utils/ApiError');
 const { Op } = require('sequelize');
 
 async function createJob(req) {
-    const { title, description, location, salary } = req.body;
+    const { title, description, location, salary, required_skills } = req.body;
     const employerId = req.user.userId;
 
     const job = await db.job_listing.create({
@@ -12,11 +12,13 @@ async function createJob(req) {
         description,
         location,
         salary,
+        required_skills,
         employer_id: employerId,
     });
 
     return job.get({ plain: true });
 }
+
 
 async function getAllJobs({ keyword, location } = {}) {
     const whereClause = {};
