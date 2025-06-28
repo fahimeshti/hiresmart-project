@@ -21,8 +21,12 @@ module.exports = (sequelize, DataTypes) => {
 				},
 			},
 			skills: {
-				type: DataTypes.ARRAY(DataTypes.STRING), // Only used by candidates
+				type: DataTypes.ARRAY(DataTypes.STRING),
 				allowNull: true
+			},
+			expected_salary: {
+				type: DataTypes.DECIMAL,
+				allowNull: true,
 			},
 			role_id: {
 				type: DataTypes.UUID,

@@ -11,6 +11,10 @@ const register = {
 			.items(Joi.string().trim())
 			.optional()
 			.allow(null),
+		expected_salary: Joi.number()
+			.positive()
+			.optional()
+			.allow(null),
 	}),
 };
 

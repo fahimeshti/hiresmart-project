@@ -25,32 +25,42 @@ async function getUserByEmail(email) {
 }
 
 async function createUser(req) {
-	const { email, name, password, roleId } = req.body;
+	const { email, name, password, roleId, skills, expected_salary } = req.body;
+
 	const hashedPassword = await encryptData(password);
 	const user = await getUserByEmail(email);
 
 	if (user) {
-		throw new ApiError(httpStatus.CONFLICT, 'This email already exits');
+		throw new ApiError(httpStatus.CONFLICT, 'This email already exists');
 	}
 
 	const role = await roleService.getRoleById(roleId);
-	
+
 	if (!role) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Role not found');
 	}
 
 	const allowedRoles = ['employer', 'candidate'];
-	if (!allowedRoles.includes(role.name.toLowerCase())) {
+	const roleName = role.name.toLowerCase();
+
+	if (!allowedRoles.includes(roleName)) {
 		throw new ApiError(httpStatus.BAD_REQUEST, 'You cannot register with this role');
 	}
 
+	const newUserPayload = {
+		name,
+		email,
+		role_id: roleId,
+		password: hashedPassword,
+	};
+
+	if (roleName === 'candidate') {
+		newUserPayload.skills = Array.isArray(skills) ? skills : [];
+		newUserPayload.expected_salary = expected_salary ?? null;
+	}
+
 	const createdUser = await db.user
-		.create({
-			name,
-			email,
-			role_id: roleId,
-			password: hashedPassword,
-		})
+		.create(newUserPayload)
 		.then((resultEntity) => resultEntity.get({ plain: true }));
 
 	return createdUser;
