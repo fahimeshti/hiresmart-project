@@ -24,22 +24,6 @@ async function getUserByEmail(email) {
 	return user;
 }
 
-async function getUserById(id) {
-	const user = await db.user.findOne({
-		where: { id },
-		include: [
-			{
-				model: db.role,
-				require: true,
-				attributes: ['id', 'name'],
-			},
-		],
-		raw: true,
-	});
-
-	return user;
-}
-
 async function createUser(req) {
 	const { email, name, password, roleId } = req.body;
 	const hashedPassword = await encryptData(password);
@@ -70,40 +54,6 @@ async function createUser(req) {
 		.then((resultEntity) => resultEntity.get({ plain: true }));
 
 	return createdUser;
-}
-
-async function getUsers(req) {
-	const { page: defaultPage, limit: defaultLimit } = config.pagination;
-	const { page = defaultPage, limit = defaultLimit } = req.query;
-
-	const offset = getOffset(page, limit);
-
-	const users = await db.user.findAndCountAll({
-		order: [
-			['name', 'ASC'],
-			['created_date_time', 'DESC'],
-			['modified_date_time', 'DESC'],
-		],
-		include: [
-			{
-				model: db.role,
-				require: true,
-				attributes: ['id', 'name'],
-			},
-		],
-		attributes: [
-			'id',
-			'name',
-			'email',
-			'created_date_time',
-			'modified_date_time',
-		],
-		offset,
-		limit,
-		raw: true,
-	});
-
-	return users;
 }
 
 async function deleteUserById(userId) {
@@ -162,9 +112,7 @@ async function updateUser(req) {
 
 module.exports = {
 	getUserByEmail,
-	getUserById,
 	createUser,
 	updateUser,
-	getUsers,
 	deleteUserById,
 };

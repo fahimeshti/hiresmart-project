@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.DECIMAL,
                 allowNull: true,
             },
+            required_skills: {
+                type: DataTypes.ARRAY(DataTypes.STRING),
+            },
             employer_id: {
                 type: DataTypes.UUID,
                 allowNull: false,

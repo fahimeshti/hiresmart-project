@@ -10,7 +10,8 @@ const createJob = catchAsync(async (req, res) => {
 });
 
 const getAllJobs = catchAsync(async (req, res) => {
-    const jobs = await jobListingService.getAllJobs();
+    const { keyword, location } = req.query;
+    const jobs = await jobListingService.getAllJobs({ keyword, location });
     res.status(httpStatus.OK).send({ jobs });
 });
 

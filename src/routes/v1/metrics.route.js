@@ -1,8 +1,5 @@
-
 const express = require('express');
-const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const metricsController = require('../../controllers/metrics.controller');
 const { grantAccess } = require('../../middlewares/validateAccessControl');
 const { resources } = require('../../config/roles');
 
@@ -12,22 +9,19 @@ router
     .route('/jobs')
     .get(
         grantAccess('readAny', resources.JOB),
-        validate(userValidation.getJobCount),
-        userController.getJobCount
+        metricsController.getJobCount
     );
 
 router.route('/users')
     .get(
         grantAccess('readAny', resources.USERINFO),
-        validate(userValidation.getUserCount),
-        userController.getUserCount
+        metricsController.getUserCount
     );
 
 router.route('/applications')
     .get(
         grantAccess('readAny', resources.APPLICATION),
-        validate(userValidation.getApplicationCount),
-        userController.getApplicationCount
+        metricsController.getApplicationCount
     );
 
 module.exports = router;

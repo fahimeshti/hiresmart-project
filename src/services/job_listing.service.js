@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const db = require('../db/models');
 const ApiError = require('../utils/ApiError');
+const { Op } = require('sequelize');
 
 async function createJob(req) {
     const { title, description, location, salary } = req.body;
@@ -17,14 +18,29 @@ async function createJob(req) {
     return job.get({ plain: true });
 }
 
-async function getAllJobs() {
+async function getAllJobs({ keyword, location } = {}) {
+    const whereClause = {};
+
+    if (keyword) {
+        whereClause[Op.or] = [
+            { title: { [Op.iLike]: `%${keyword}%` } },
+            { description: { [Op.iLike]: `%${keyword}%` } },
+        ];
+    }
+
+    if (location) {
+        whereClause.location = { [Op.iLike]: `%${location}%` };
+    }
+
     const jobs = await db.job_listing.findAll({
+        where: whereClause,
         order: [['created_date_time', 'DESC']],
         attributes: { exclude: ['employer_id'] },
     });
 
     return jobs.map((job) => job.get({ plain: true }));
 }
+
 
 
 async function getJobById(jobId) {

@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
 					isEmail: true,
 				},
 			},
+			skills: {
+				type: DataTypes.ARRAY(DataTypes.STRING), // Only used by candidates
+				allowNull: true
+			},
 			role_id: {
 				type: DataTypes.UUID,
 				allowNull: false,
