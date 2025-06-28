@@ -13,7 +13,6 @@ async function matchJobsAndCandidates() {
     });
 
     const jobs = await db.job_listing.findAll();
-
     const matches = [];
 
     for (const candidate of candidates) {
