@@ -24,9 +24,13 @@ async function matchJobsAndCandidates() {
 
             const skillMatch = hasSkillMatch(candidateSkills, jobSkills);
             const locationMatch = preferred_location?.toLowerCase() === job.location?.toLowerCase();
-            const salaryMatch = expected_salary <= job.salary;
+            const salaryMatch =
+                expected_salary != null &&
+                job.salary != null &&
+                Number(expected_salary) <= Number(job.salary);
 
-            if (skillMatch) {
+
+            if (salaryMatch) {
                 const match = {
                     jobId: job.id,
                     candidateId: candidate.id,
@@ -43,7 +47,9 @@ async function matchJobsAndCandidates() {
                 matches.push(match);
 
                 // Mocked notification
-                console.log(`📩 Notify ${candidate.name} about job "${job.title}"`);
+                console.log(`Notify ${candidate.name} about job "${job.title}"`);
+            } else {
+                console.log(`No match found.`);
             }
         }
     }

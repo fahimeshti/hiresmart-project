@@ -77,4 +77,6 @@ app.use(errorHandler);
 // Starts background job matcher
 require('./schedulers/match_scheduler');
 
+require('./schedulers/maintenance_scheduler');
+
 module.exports = app;

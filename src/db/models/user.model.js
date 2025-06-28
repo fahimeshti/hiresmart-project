@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.DECIMAL,
 				allowNull: true,
 			},
+			preferred_location: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
 			role_id: {
 				type: DataTypes.UUID,
 				allowNull: false,
