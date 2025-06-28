@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
+			is_verified: {
+				type: DataTypes.BOOLEAN,
+				allowNull: false,
+				defaultValue: false,
+			},
 			created_date_time: {
 				type: DataTypes.DATE,
 				defaultValue: DataTypes.NOW,
