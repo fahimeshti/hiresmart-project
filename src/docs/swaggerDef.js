@@ -4,7 +4,7 @@ const config = require('../config/config');
 const swaggerDef = {
 	openapi: '3.0.0',
 	info: {
-		title: 'node-express-postgresql-boilerplate API documentation',
+		title: 'Hiresmart Project API documentation',
 		version,
 		license: {
 			name: '',
