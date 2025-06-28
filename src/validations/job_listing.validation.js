@@ -1,20 +1,22 @@
 const Joi = require('@hapi/joi');
 
-// Create Job Listing
 const createJob = {
     body: Joi.object().keys({
         title: Joi.string().required(),
         description: Joi.string().required(),
         location: Joi.string().optional().allow(null, ''),
-        salary: Joi.number().optional().positive().allow(null),
+        salary: Joi.number().positive().optional().allow(null),
         required_skills: Joi.array()
             .items(Joi.string().trim())
+            .optional()
+            .allow(null),
+        status: Joi.string()
+            .valid('open', 'closed', 'archived')
             .optional()
             .allow(null),
     }),
 };
 
-// Update Job Listing
 const updateJob = {
     params: Joi.object().keys({
         jobId: Joi.required(),
@@ -25,7 +27,12 @@ const updateJob = {
             description: Joi.string(),
             location: Joi.string().allow(null, ''),
             salary: Joi.number().positive().allow(null),
-            required_skills: Joi.array().allow(null),
+            required_skills: Joi.array()
+                .items(Joi.string().trim())
+                .allow(null),
+            status: Joi.string()
+                .valid('open', 'closed', 'archived')
+                .allow(null),
         })
         .min(1),
 };

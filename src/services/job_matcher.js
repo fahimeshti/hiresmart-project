@@ -30,26 +30,19 @@ async function matchJobsAndCandidates() {
                 Number(expected_salary) <= Number(job.salary);
 
 
-            if (salaryMatch) {
+            if (skillMatch && salaryMatch && locationMatch) {
                 const match = {
                     jobId: job.id,
                     candidateId: candidate.id,
                     candidate: candidate.name,
                     job: job.title,
-                    jobLocation: job.location,
-                    preferredLocation: preferred_location,
-                    jobSalary: job.salary,
-                    expectedSalary: expected_salary,
-                    candidateSkills: candidateSkills,
-                    jobSkills: jobSkills,
+                    job,
                 };
-                console.log(`✅ MATCH FOUND:`, match);
+                console.log(`MATCH FOUND:`, match);
                 matches.push(match);
 
                 // Mocked notification
-                console.log(`Notify ${candidate.name} about job "${job.title}"`);
-            } else {
-                console.log(`No match found.`);
+                console.log(`Notify "${candidate.name}" about job "${job.title}"`);
             }
         }
     }

@@ -67,7 +67,7 @@ async function getJobsByEmployer(employerId) {
 
 async function updateJob(req) {
     const { jobId } = req.params;
-    const { title, description, location, salary } = req.body;
+    const { title, description, location, salary, status, required_skills } = req.body;
     const employerId = req.user.userId;
 
     const job = await db.job_listing.findByPk(jobId);
@@ -85,6 +85,8 @@ async function updateJob(req) {
         description: description ?? job.description,
         location: location ?? job.location,
         salary: salary ?? job.salary,
+        status: status ?? job.status,
+        required_skills: Array.isArray(required_skills) ? required_skills : job.required_skills,
         modified_date_time: new Date(),
     });
 
