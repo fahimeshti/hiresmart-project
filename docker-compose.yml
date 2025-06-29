@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: yarn dev
+    command: sh -c "npx sequelize-cli db:migrate && yarn dev"
 
   db:
     image: postgres:14
