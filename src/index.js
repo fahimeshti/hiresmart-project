@@ -5,7 +5,7 @@ const config = require('./config/config');
 const logger = require('./config/logger');
 
 // sync database
-models.sequelize.sync();
+// models.sequelize.sync();
 
 const server = http.Server(app);
 
