@@ -64,12 +64,16 @@ A robust Node.js-based backend system to manage job listings, applications, user
 ### Security
 - JWT-based authentication
 - Passwords hashed with bcrypt
-- Rate-limiting on login
+- Rate-limiting on public endpoints
 - helmet, xss-clean to mitigate common vulnerabilities
 
 ### Swagger Docs
 - Partially documented using JSDoc-style Swagger annotations
 - Accessible at `/v1/docs`
+
+### Docker Setup
+- Implemented Docker health checks for service readiness
+- Added Docker Compose configuration for Node.js, PostgreSQL, and Redis
 
 
 ## Development Scripts

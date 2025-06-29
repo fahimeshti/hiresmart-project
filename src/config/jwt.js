@@ -21,7 +21,7 @@ function jwt() {
 	}).unless({
 		path: [
 			// public routes that don't require authentication
-			/\/v[1-9](\d)*\/(auth|docs)(\/.*)?$/,
+			/\/v[1-9](\d)*\/(auth|docs|health)(\/.*)?$/,
 			{ url: /\/v[1-9](\d)*\/jobs$/, methods: ['GET'] },
 		],
 	});
