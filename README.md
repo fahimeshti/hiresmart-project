@@ -3,21 +3,13 @@ A robust Node.js-based backend system to manage job listings, applications, user
 
 # Features
 - User authentication & authorization
-
 - Employer-driven job posting
-
 - Candidate application submissions
-
 - Role-based access control (RBAC)
-
 - Background job matching engine (skills, salary, location)
-
 - Job post archiving & cleanup (via cron)
-
 - Redis caching for recent jobs (5 min)
-
 - Swagger API documentation
-
 - Dockerized setup for local & production environments
 
 # Technologies
@@ -33,7 +25,7 @@ A robust Node.js-based backend system to manage job listings, applications, user
 
 1. Clone the repository with `https://github.com/fahimeshti/hiresmart-project.git`
 2. cd hiresmart-backend
-3. Setup config information on `env.example`
+3. Copy configuration from `.env.example` to `.env`
 4. docker compose up --build
 5. Then open http://localhost:3000/v1/docs for Swagger API.
 
