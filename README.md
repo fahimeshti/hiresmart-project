@@ -1,24 +1,87 @@
-# Nodejs Express base API
+# HireSmart – Job Listing & Application System
+A robust Node.js-based backend system to manage job listings, applications, user roles (admin, employer, candidate), and background matching logic, built with Sequelize, PostgreSQL, Redis, and Docker.
 
-This is a boilerplate application for building REST APIs in Node.js using ES6, Express and PostgreSQL.
+# Features
+- User authentication & authorization
 
-## Getting Started
+- Employer-driven job posting
 
-### Installation
+- Candidate application submissions
 
-1. Clone the repository with `https://github.com/japananh/node-express-postgres-boilerplate.git`
-2. Install the dependencies with `yarn install` (click here if [you don't have Yarn installed](https://yarnpkg.com/getting-started/install)
-3. Setup the database on `src/config/postgres.js` and config information on `env.example`
+- Role-based access control (RBAC)
 
-### Scripts
+- Background job matching engine (skills, salary, location)
 
-This boilerplate comes with a collection of npm scripts to make your life easier, you'll run them with `npm run <script name>` or `yarn <script name>`:
+- Job post archiving & cleanup (via cron)
 
--   `dev`: Run the application in development mode
--   `lint`: Run ESLint
--   `lint:fix`: Fix ESLint errors
--   `prettier`: Run prettier
--   `prettier:fix`: Fix prettier errors
+- Redis caching for recent jobs (5 min)
+
+- Swagger API documentation
+
+- Dockerized setup for local & production environments
+
+# Technologies
+- Node.js, Express
+- PostgreSQL + Sequelize ORM
+- Redis (caching)
+- Docker / Docker Compose
+- Swagger (API docs)
+- Helmet, xss-clean (security)
+- express-jwt, bcrypt, Joi
+
+### Setup Instructions
+
+1. Clone the repository with `https://github.com/fahimeshti/hiresmart-project.git`
+2. cd hiresmart-backend
+3. Setup config information on `env.example`
+4. docker compose up --build
+5. Then open http://localhost:3000/v1/docs for Swagger API.
+
+### Apply Migrations & Seeders
+- `docker exec -it node_app npx sequelize-cli db:migrate`
+- `docker exec -it node_app npx sequelize-cli db:seed:all`
+
+
+
+## Design Decisions
+
+### Modular Architecture
+- Feature-based separation of controllers, services, models, and routes ensures scalability.
+- Middleware-driven validation and role-based access improves maintainability.
+
+### PostgreSQL + Sequelize
+- Sequelize enables structured migration and model definition while keeping raw SQL capability.
+
+### Background Processing
+- Cron jobs using node-cron handle:
+- Job matching (every 2 min)
+- Job archiving (daily)
+- Unverified user cleanup (weekly)
+
+### Redis Caching
+- Recent job listings are cached using Redis with a 5-minute TTL, reducing load on Postgres.
+
+### Security
+- JWT-based authentication
+- Passwords hashed with bcrypt
+- Rate-limiting on login
+- helmet, xss-clean to mitigate common vulnerabilities
+
+### Swagger Docs
+- Partially documented using JSDoc-style Swagger annotations
+- Accessible at `/v1/docs`
+
+
+## Development Scripts
+```
+# Run app locally without Docker
+yarn install
+yarn dev
+
+# Run migrations/seeds
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all
+```
 
 ## Project Structure
 
@@ -34,6 +97,7 @@ src\
  |--docs\           # Swagger files
  |--middlewares\    # Custom express middlewares
  |--routes\         # Routes
+ |--schedulers\     # Background schedulers
  |--services\       # Business logic (service layer)
  |--utils\          # Utility classes and functions
  |--validations\    # Request data validation schemas
@@ -52,38 +116,26 @@ List of available routes:
 **Auth routes**:\
 `POST /v1/auth/register` - register\
 `POST /v1/auth/login` - login\
-`POST /v1/auth/forgot-password` - forgot-password\
-`POST /v1/auth/reset-password` - reset-password
 
-**User routes**:\
-`POST /v1/users` - create a user\
-`GET /v1/users` - get all users\
-`GET /v1/users/:userId` - get user\
-`PATCH /v1/users/:userId` - update user\
-`DELETE /v1/users/:userId` - delete user
+**Job routes**:\
+`POST /v1/jobs` - create a job\
+`GET /v1/jobs` - get all jobs\
+`PATCH /v1/jobs/:jobId` - update a job\
+`DELETE /v1/jobs/:jobId` - delete a job\
+`POST /v1/jobs/:jobId/apply` - apply to a job\
+`GET /v1/jobs/:jobId/applications` - get job applications\
+`GET /v1/jobs/:jobId/stats` - get job statistics (employer only)
 
-**Role routes**:\
-`POST /v1/roles` - create a role\
-`GET /v1/roles` - get all roles\
-`GET /v1/roles/:roleId` - get a role\
-`PATCH /v1/roles/:roleId` - update a role\
-`DELETE /v1/roles/:roleId` - delete a role
+**Employer routes**:\
+`GET /v1/employer/jobs` - get self posted jobs\
 
-## Database
+**Metrics routes**:\
+`GET /v1/metrics/jobs` - get jobs statistics\
+`GET /v1/metrics/users` - get users statistics\
+`GET /v1/metrics/applications` - get applications statistics
 
-This app uses [Sequelize](https://sequelize.org/) - an **Object-Relational Mapper** to maps object syntax into Postgres database, and [Sequelize CLI](https://github.com/sequelize/cli) package to manage sequelize.
 
-There are 2 ways to run `sequelize-cli`.
-
-```bash
-# Method 1: Use sequelize global
-npm install -g sequelize-cli
-
-sequelize db:migrate
-
-# Method 2
-node_modules/.bin/sequelize db:migrate
-```
+## Code Overview
 
 ## Error Handling
 
@@ -140,15 +192,15 @@ The validation schemas are defined in the `src/validations` directory and are us
 ```javascript
 const express = require('express');
 const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const authValidation = require('../../validations/auth.validation');
+const authController = require('../../controllers/auth.controller');
 
 const router = express.Router();
 
 router.post(
-	'/users',
-	validate(userValidation.createUser),
-	userController.createUser
+	'/register',
+	validate(authValidation.register),
+	authController.register
 );
 ```
 
@@ -218,19 +270,6 @@ This app uses pm2 in production mode, which is already configured to store the l
 
 Note: API request information (request url, response code, timestamp, etc.) are also automatically logged (using [morgan](https://github.com/expressjs/morgan)).
 
-## Inspirations
+## Boilerplate credit
 
 -   [hagopj13/node-express-boilerplate](https://github.com/hagopj13/node-express-boilerplate)
-
-## License
-
-To be updated
-
-## TODOs
-
--   [x] Update authentication flow to use refreshToken
--   [x] Rewrite README using this sample [template](https://github.com/talyssonoc/node-api-boilerplate)
--   [x] Handle postgres with [Squelize](https://www.npmjs.com/package/sequelize)
--   [x] Update CHANGELOG
--   [ ] Add test
--   [ ] Refactor code use Typescript

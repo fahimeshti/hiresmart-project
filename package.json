@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/trungnq89/nodejs-api.git"
+    "url": "https://github.com/fahimeshti/hiresmart-project.git"
   },
   "keywords": [
     "node",
@@ -31,10 +31,6 @@
   ],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://gitlab.com/trungnq89/nodejs-api/issues"
-  },
-  "homepage": "https://gitlab.com/trungnq89/nodejs-api#readme",
   "engines": {
     "node": ">=12.0.0"
   },
