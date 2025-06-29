@@ -9,7 +9,7 @@ const { postgres } = require('./config/postgres');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const jwt = require('./config/jwt');
-const { authLimiter } = require('./middlewares/rateLimiter');
+const { rateLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
@@ -55,10 +55,8 @@ app.use((req, _, next) => {
 	next();
 });
 
-// limit repeated failed requests to auth endpoints
-// if (config.env === 'production') {
-// app.use('/v1/auth', authLimiter);
-// }
+// limit requests to public auth endpoints
+app.use('/v1/auth', rateLimiter);
 
 // v1 api routes
 app.use('/v1', routes);

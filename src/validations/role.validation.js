@@ -16,13 +16,13 @@ const getRoles = {
 
 const getRole = {
 	params: Joi.object().keys({
-		roleId: Joi.string().required(),
+		roleId: Joi.number().required(),
 	}),
 };
 
 const updateRole = {
 	params: Joi.object().keys({
-		roleId: Joi.string().required(),
+		roleId: Joi.number().required(),
 	}),
 	body: Joi.object()
 		.keys({
@@ -34,7 +34,7 @@ const updateRole = {
 
 const deleteRole = {
 	params: Joi.object().keys({
-		roleId: Joi.string(),
+		roleId: Joi.number(),
 	}),
 };
 
