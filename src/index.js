@@ -1,11 +1,7 @@
 const http = require('http');
 const app = require('./app');
-const models = require('./db/models');
 const config = require('./config/config');
 const logger = require('./config/logger');
-
-// sync database
-// models.sequelize.sync();
 
 const server = http.Server(app);
 

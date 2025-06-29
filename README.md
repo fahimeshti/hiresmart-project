@@ -34,7 +34,6 @@ A robust Node.js-based backend system to manage job listings, applications, user
 - `docker exec -it node_app npx sequelize-cli db:seed:all`
 
 
-
 ## Design Decisions
 
 ### Modular Architecture
