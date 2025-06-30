@@ -24,7 +24,7 @@ A robust Node.js-based backend system to manage job listings, applications, user
 ### Setup Instructions
 
 1. Clone the repository with `https://github.com/fahimeshti/hiresmart-project.git`
-2. cd hiresmart-backend
+2. cd hiresmart-project
 3. Copy configuration from `.env.example` to `.env`
 4. docker compose up --build -d
 5. Then open http://localhost:3000/v1/docs for Swagger API.
